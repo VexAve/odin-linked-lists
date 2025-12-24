@@ -67,6 +67,7 @@ class LinkedList {
             this.#head = this.#head.nextNode;
             return temp;
         }
+        this.#size--;
     }
 
     contains(value) {
@@ -99,6 +100,40 @@ class LinkedList {
             currentNode = currentNode.nextNode;
         }
         return str + "null";
+    }
+
+    insertAt(index, ...values) {
+        if (index < 0 || index > this.#size) {
+            throw RangeError("Index out of bounds.")
+        }
+        
+        const sublist = new LinkedList();
+        for (const value of values) {
+            sublist.append(value);
+        }
+        this.#size += values.length;
+
+        if (index === 0) {
+            sublist.tail().nextNode = this.#head;
+            this.#head = sublist.head();
+        } else {
+            const justBefore = this.at(index - 1);
+            sublist.tail().nextNode = justBefore.nextNode;
+            justBefore.nextNode = sublist.head();
+        }
+    }
+
+    removeAt(index) {
+        if (index < 0 || index >= this.#size) {
+            throw RangeError("Index out of bounds.");
+        }
+        this.#size--;
+
+        if (index === 0) {
+            this.#head = this.#head.nextNode;
+        } else {
+            this.at(index - 1).nextNode = this.at(index).nextNode;
+        }
     }
 }
 
